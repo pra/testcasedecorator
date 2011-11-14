@@ -37,7 +37,6 @@ public class MavenTestDataPublisherFix extends Recorder {
         public MavenTestDataPublisherFix(DescribableList<TestDataPublisher, Descriptor<TestDataPublisher>> testDataPublishers) {
                 super();
                 this.testDataPublishers = testDataPublishers;
-                System.err.println("DEBUG in MTDPF " + testDataPublishers);
         }
 
         
@@ -49,8 +48,7 @@ public class MavenTestDataPublisherFix extends Recorder {
         public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
 
                 addTestDataPublishersToMavenModules(build, launcher, listener);
-                addTestDataPublishersToBuildReport(build, launcher, listener);
-
+                addTestDataPublishersToBuildReport(build, launcher, listener);                
                 return true;
         }
 
@@ -71,14 +69,11 @@ public class MavenTestDataPublisherFix extends Recorder {
                         InterruptedException {
                 //SurefireReport report = build.getAction(SurefireReport.class);
                 TestResultAction report = build.getAction(TestResultAction.class);
-                System.err.println("DEBUG in MTDPE performing " + report);
                 if (report != null) {
                         List<Data> data = new ArrayList<Data>();
                         if (testDataPublishers != null) {
                                 for (TestDataPublisher tdp : testDataPublishers) {
-                                    System.err.println("DEBUG in MTDPF addData " + tdp);
                                         Data d = tdp.getTestData(build, launcher, listener, report.getResult());
-                                        System.err.println("DEBUG in MTDPF addData " + d);
                                         if (d != null) {
                                                 data.add(d);
                                         }
@@ -86,6 +81,7 @@ public class MavenTestDataPublisherFix extends Recorder {
                         }
 
                         report.setData(data);
+                        build.save();
                 }
         }
 
