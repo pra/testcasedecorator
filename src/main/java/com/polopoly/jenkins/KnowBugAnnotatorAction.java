@@ -1,5 +1,8 @@
 package com.polopoly.jenkins;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import hudson.tasks.junit.CaseResult;
 import hudson.tasks.junit.TestAction;
 import hudson.tasks.junit.TestObject;
@@ -27,11 +30,15 @@ public class KnowBugAnnotatorAction extends TestAction {
     public String getUrlName() {
         return "known-bugs";
     }
+    
+    public URL getTestCaseUrl(String testName) throws MalformedURLException {
+        System.err.println("DEBUG annotating " + testName);
+        return new URL(SOLR_QUERY + testName);   
+        //return "KnownBugs " + testObject + ": " + testResult;
+    }
 
     @Override
-    public String annotate(String testName) {
-        System.err.println("DEBUG annotating " + testName);
-        return SOLR_QUERY + testName;
-        //return "KnownBugs " + testObject + ": " + testResult;
+    public String annotate(String text) {
+        return text;
     }
 }

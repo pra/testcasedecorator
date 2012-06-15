@@ -12,6 +12,7 @@ import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
+import hudson.model.Saveable;
 import hudson.tasks.junit.CaseResult;
 import hudson.tasks.junit.TestAction;
 import hudson.tasks.junit.TestDataPublisher;
@@ -37,11 +38,15 @@ public class KnownBugAnnotator extends TestDataPublisher {
     public Data getTestData(final AbstractBuild<?, ?> build, final Launcher launcher, 
                             final BuildListener listener, final TestResult testResult) 
     throws IOException,InterruptedException {
-        return new KnownBugData();
+        return new KnownBugData(build);
     }
     
-    public static class KnownBugData extends Data {
-        public KnownBugData() {}
+    public static class KnownBugData extends Data implements Saveable {
+        private final AbstractBuild<?,?> build;
+        
+        public KnownBugData(AbstractBuild<?,?> build) {
+            this.build = build;
+        }
         
         @Override
         public List<? extends TestAction> getTestAction(TestObject testObject) {
@@ -51,6 +56,12 @@ public class KnownBugAnnotator extends TestDataPublisher {
             else {
                 return Collections.EMPTY_LIST;
             }
+        }
+
+        public void save() throws IOException
+        {
+            System.err.println("DEBUG saving");
+            build.save();
         }
     }
     

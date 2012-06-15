@@ -1,2 +1,33 @@
 <?jelly escape-by-default='true'?>
- <a target="_blank" href="${it.annotate(f.fullName)}">Search Solr for test</a>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <st:once>
+    <script type="text/javascript" src="${rootURL}/plugin/testcasedecorator/js/ajax-solr/core/Core.js" />
+    <script type="text/javascript" src="${rootURL}/plugin/testcasedecorator/js/ajax-solr/core/AbstractManager.js" />
+    <script type="text/javascript" src="${rootURL}/plugin/testcasedecorator/js/ajax-solr/managers/Manager.jquery.js" />
+    <script type="text/javascript" src="${rootURL}/plugin/testcasedecorator/js/ajax-solr/core/Parameter.js" />
+    <script type="text/javascript" src="${rootURL}/plugin/testcasedecorator/js/ajax-solr/core/ParameterStore.js" />
+  </st:once>
+  <script type="text/javascript">
+var Manager;
+(function ($) {
+  $(function () {
+
+    Manager = new AjaxSolr.Manager({
+      solrUrl: 'http://prodtest03:8983/solr/'
+    });
+    Manager.init();
+    Manager.store.addByValue('q', 'ticket_s:#* AND ' + 'test:com.polopoly.user.server.SingleSignOnServletTestInt/test_sso_with_access_return_200_ok');
+   // Manager.store.addByValue('q', 'ticket_s:#*+AND+test:com.polopoly.user.server.SingleSignOnServletTestInt/test_sso_with_access_return_200_ok');
+
+   Manager.handleResponse = function(data) {
+  // 				 alert(data.response.docs[0].ticket_s);
+				 $("#ticket").text(data.response.docs[0].ticket_s);
+   }
+
+    Manager.doRequest();
+  });
+})(jQuery);
+  </script>
+
+  <a target="_blank" href="${it.getTestCaseUrl(f.fullName)}">Has ticket <span id="ticket"></span></a><a href="${request.contextPath}/dummy.js"></a>
+</j:jelly>

@@ -57,7 +57,7 @@ public class MavenTestDataPublisherFix extends Recorder {
                 if (build instanceof MavenModuleSetBuild) {
                         Map<MavenModule, List<MavenBuild>> buildsMap = ((MavenModuleSetBuild) build).getModuleBuilds();
                         for (List<MavenBuild> mavenBuild : buildsMap.values()) {
-                                MavenBuild lastBuild = getLastOrNullIfEmpty(mavenBuild);
+                                MavenBuild lastBuild = RecorderUtils.getLastOrNullIfEmpty(mavenBuild);
                                 if (lastBuild != null) {
                                         addTestDataPublishersToBuildReport(lastBuild, launcher, listener);
                                 }
@@ -85,13 +85,7 @@ public class MavenTestDataPublisherFix extends Recorder {
                 }
         }
 
-        private MavenBuild getLastOrNullIfEmpty(List<MavenBuild> builds) {
-                if (builds.isEmpty()) {
-                        return null;
-                } else {
-                        return builds.get(builds.size() - 1);
-                }
-        }
+ 
 
         public DescribableList<TestDataPublisher, Descriptor<TestDataPublisher>> getTestDataPublishers() {
                 return testDataPublishers;

@@ -2,5 +2,6 @@
   This view is used to render the installed plugins page.
 -->
 <div>
-  This plugin is a sample to explain how to write a Jenkins plugin.
+  Hudson/Jenkins' solr indexing.
+  Open <a href='${request.contextPath}/solr'>report</a> after installation.
 </div>
